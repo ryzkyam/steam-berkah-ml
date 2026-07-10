@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# Install dependency agar Prophet bisa jalan
+# Install sistem dependensi
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
@@ -13,5 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Menjalankan aplikasi dengan Gunicorn agar lebih stabil
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-w", "1", "-b", "0.0.0.0:8000", "main:app", "--timeout", "120"]
+# Menggunakan perintah ini agar Gunicorn lebih tahan banting
+ENV PYTHONUNBUFFERED=1
+CMD ["gunicorn", "main:app", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "--timeout", "120"]
