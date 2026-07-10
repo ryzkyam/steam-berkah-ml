@@ -1,5 +1,6 @@
 import os
 import datetime
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
@@ -291,6 +292,7 @@ def get_segmentation(branch_id: int):
         persentase = round((jumlah_cluster_terbesar / total_data) * 100, 1)
 
         # Mapping Karakteristik Cluster ke Istilah Bisnis
+        #  
         centroids = kmeans.cluster_centers_
         
         mapping_nama = {}
@@ -389,3 +391,9 @@ def get_analisis_produk(branch_id: int):
             "motor_terbanyak": "ERROR DATA",
             "layanan_laris_lain": f"Detail: {str(e)}"
         }
+    
+if __name__ == "__main__":
+    # Ini cara supaya Railway bisa menjalankan aplikasi kamu dengan port yang tepat
+    port = int(os.environ.get("PORT", 8000))
+    # Host 0.0.0.0 wajib supaya aplikasi bisa diakses dari luar (internet)
+    uvicorn.run(app, host="0.0.0.0", port=port)
